@@ -1,0 +1,10 @@
+AuditLogs
+| where TimeGenerated > ago(45d)
+| where OperationName == "Add member to role completed (PIM activation)"
+| extend AccountUPN = tostring(parse_json(tostring(InitiatedBy.user)).userPrincipalName)
+| where AccountUPN in ("[enter name]", "", "", "")
+| project AccountUPN, ResultDescription
+| summarize count() by AccountUPN, ResultDescription
+| sort by AccountUPN asc
+
+// via Toby
