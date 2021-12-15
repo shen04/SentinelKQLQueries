@@ -1,0 +1,5 @@
+OfficeActivity
+| where TimeGenerated between(datetime("12-15-2021  13:00:00") .. datetime("12-15-2021  14:30:00"))
+| where UserId contains "[enter user ID]"
+| where SourceFileName contains "[enter source file name]"
+| project Operation, OfficeWorkload, OfficeObjectId, UserId, ClientIP, Site_Url, SourceFileName, ElevationTime
