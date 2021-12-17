@@ -1,0 +1,9 @@
+DeviceInfo
+| extend UserName_ = tostring(LoggedOnUsers[0].UserName)
+| where UserName_ contains ""
+| project TimeGenerated, PublicIP, DeviceName
+| sort by TimeGenerated
+
+IntuneDeviceComplianceOrg
+| where TimeGenerated > ago(7d)
+| where DeviceName =~ ""
