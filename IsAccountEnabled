@@ -1,0 +1,4 @@
+IdentityInfo
+| where AccountName == ""
+| project TimeGenerated, AccountDomain, GroupMembership, IsAccountEnabled
+| sort by TimeGenerated
