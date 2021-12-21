@@ -1,5 +1,4 @@
-
 SigninLogs
-| where UserPrincipalName == "[enter user here]"
-| project IPAddress, TimeGenerated, Location, LocationDetails, OperationName, Resource, ResourceDisplayName
+| where UserPrincipalName == ""
+| project TimeGenerated, IPAddress, Location, LocationDetails, OperationName, ResourceDisplayName, AppDisplayName, Status
 | sort by TimeGenerated
