@@ -1,0 +1,10 @@
+let GetAccountRelatedAlerts = (v_Account_Name: string) {
+SecurityAlert
+| summarize arg_max(TimeGenerated, *) by SystemAlertId
+| extend entities = todynamic(Entities)
+| mv-expand entities
+| project-rename entity=entities
+| where entity['Type'] == 'account' and entity['Name'] =~ v_Account_Name
+| project-away entity
+};
+GetAccountRelatedAlerts(@'')
