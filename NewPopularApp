@@ -1,0 +1,5 @@
+DeviceNetworkEvents
+| where TimeGenerated > ago(7d)
+| where RemoteUrl contains ""
+| project TimeGenerated, RemotePort, DeviceName, InitiatingProcessAccountUpn, RemoteUrl
+| sort by TimeGenerated
