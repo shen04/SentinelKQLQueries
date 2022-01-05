@@ -1,4 +1,5 @@
 IdentityInfo
-| where AccountName == ""
+| where TimeGenerated > ago(30d)
+| where AccountUPN =~ ""
 | project TimeGenerated, AccountDomain, GroupMembership, IsAccountEnabled
 | sort by TimeGenerated
