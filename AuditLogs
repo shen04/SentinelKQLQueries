@@ -1,5 +1,5 @@
 AuditLogs
-| where TimeGenerated between(datetime("12-14-2021  16:45:00") .. datetime("12-14-2021  16:55:00"))
+| where TimeGenerated between(datetime("01-07-2021 09:00:00") .. datetime("01-07-2021 09:00:00"))
 | extend userPrincipalName = tostring(parse_json(tostring(InitiatedBy.user)).userPrincipalName)
 | where userPrincipalName == "[enter user here]"
 | sort by TimeGenerated asc
