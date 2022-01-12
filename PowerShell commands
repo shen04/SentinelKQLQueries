@@ -1,0 +1,5 @@
+DeviceEvents
+| where InitiatingProcessAccountUpn == ""
+| where TimeGenerated between(datetime("01-11-2022 14:00:00") .. datetime("01-11-2022 17:00:00"))
+| project TimeGenerated, DeviceName, ActionType, InitiatingProcessCommandLine, AdditionalFields, InitiatingProcessParentFileName
+| sort by TimeGenerated desc
