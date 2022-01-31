@@ -1,0 +1,6 @@
+AADNonInteractiveUserSignInLogs
+| where TimeGenerated between(datetime("01-28-2022 11:00:00") .. datetime("01-28-2022 15:00:00"))
+| where UserPrincipalName == ""
+| where AppDisplayName contains "Microsoft Teams"
+| project TimeGenerated, SourceSystem, Category, Identity, Location, AppDisplayName, AuthenticationDetails, AuthenticationRequirement, ClientAppUsed, ConditionalAccessStatus, IPAddress, LocationDetails, Status
+| sort by TimeGenerated desc
