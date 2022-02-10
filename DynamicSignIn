@@ -1,0 +1,6 @@
+let affectedUser = dynamic(["",""]);
+SigninLogs
+| where UserPrincipalName in~ (affectedUser)
+| where TimeGenerated between(datetime("01-27-2022 06:00:00") .. datetime("02-05-2022 19:00:00"))
+| project TimeGenerated, IPAddress, Location, LocationDetails, OperationName, ResourceDisplayName, AppDisplayName, Status, DeviceDetail
+| sort by TimeGenerated
