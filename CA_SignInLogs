@@ -1,0 +1,15 @@
+SigninLogs
+| where TimeGenerated between(datetime("02-01-2022 09:00:00") .. datetime("03-03-2022 09:00:00"))
+| where UserPrincipalName == ""
+| where ClientAppUsed in (
+    "Exchange ActiveSync", "Exchange Web Services", "AutoDiscover", "Unknown", "POP3", "IMAP4", "Other clients", "Authenticated SMTP", "MAPI Over HTTP", "Offline Address Book"
+    )
+| extend
+    ConditionalAccessResult = 
+        iff(ConditionalAccessPolicies[0].displayName == "Block Basic Auth", ConditionalAccessPolicies[0].result
+        , iff(ConditionalAccessPolicies[1].displayName == "Block Basic Auth", ConditionalAccessPolicies[1].result
+        , iff(ConditionalAccessPolicies[2].displayName == "Block Basic Auth", ConditionalAccessPolicies[2].result
+        , iff(ConditionalAccessPolicies[3].displayName == "Block Basic Auth", ConditionalAccessPolicies[3].result
+        , iff(ConditionalAccessPolicies[4].displayName == "Block Basic Auth", ConditionalAccessPolicies[4].result
+        , '')))))
+| project TimeGenerated, IPAddress, Location, ResourceDisplayName, AppDisplayName, ConditionalAccessResult, ClientAppUsed
