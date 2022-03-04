@@ -1,6 +1,7 @@
+// Check if a user is Legacy Authentication. 
+let UserNames = dynamic([""]);
 SigninLogs
-| where TimeGenerated between(datetime("02-01-2022 09:00:00") .. datetime("03-03-2022 09:00:00"))
-| where UserPrincipalName == ""
+| where UserPrincipalName in (UserNames)
 | where ClientAppUsed in (
     "Exchange ActiveSync", "Exchange Web Services", "AutoDiscover", "Unknown", "POP3", "IMAP4", "Other clients", "Authenticated SMTP", "MAPI Over HTTP", "Offline Address Book"
     )
@@ -12,4 +13,8 @@ SigninLogs
         , iff(ConditionalAccessPolicies[3].displayName == "Block Basic Auth", ConditionalAccessPolicies[3].result
         , iff(ConditionalAccessPolicies[4].displayName == "Block Basic Auth", ConditionalAccessPolicies[4].result
         , '')))))
-| project TimeGenerated, IPAddress, Location, ResourceDisplayName, AppDisplayName, ConditionalAccessResult, ClientAppUsed
+| extend LocationString = strcat(tostring(LocationDetails.countryOrRegion), "/", tostring(LocationDetails.state), "/", tostring(LocationDetails.city))
+| summarize StartTime = min(TimeGenerated), EndTime = max(TimeGenerated), LocationCount=dcount(LocationString), Location = make_set(LocationString),
+  IPAddress = make_set(IPAddress), IPAddressCount = dcount(IPAddress),
+  SigninCount = count()
+  by UserPrincipalName, Type
