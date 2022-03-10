@@ -1,0 +1,7 @@
+let affectedUser = dynamic(["", "", "", ""]);
+OfficeActivity
+| where UserId in~ (affectedUser)
+| where TimeGenerated between(datetime("03-09-2022 06:00:00") .. datetime("03-10-2022 19:00:00"))
+| where Operation == "FileDownloaded"
+| project Operation, OfficeWorkload, OfficeObjectId, UserId, ClientIP, Site_Url, SourceFileName, ElevationTime
+
