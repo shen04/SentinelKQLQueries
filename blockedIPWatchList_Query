@@ -1,0 +1,11 @@
+let blockedIPList= _GetWatchlist('blockedIPList') | project IPAddress;
+SigninLogs
+| where IPAddress in (blockedIPList)
+| where TimeGenerated > ago(90d)
+| where ResultType == 0
+| extend City = tostring(LocationDetails.city)
+    , State = tostring(LocationDetails.state)
+    , Region = tostring(LocationDetails.countryOrRegion)
+| extend locationstring= strcat(City, " : ", State, " : ", Region)
+| summarize AppDisplayNameList= make_set(AppDisplayName), IPAddressSet = make_set(IPAddress), Locations= make_set(locationstring), min(TimeGenerated), max(TimeGenerated) by UserPrincipalName
+| take 100
