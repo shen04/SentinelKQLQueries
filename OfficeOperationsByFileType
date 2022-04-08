@@ -1,0 +1,36 @@
+// The query_now parameter represents the time (in UTC) at which the scheduled analytics rule ran to produce this alert.
+set query_now = datetime(2022-04-07T11:20:45.0850783Z);
+let threshold = 50;
+let szSharePointFileOperation = "SharePointFileOperation";
+let szOperations = dynamic(["FileDownloaded", "FileUploaded"]);
+let starttime = 14d;
+let endtime = 1d;
+let historicalActivity =
+OfficeActivity
+| where TimeGenerated between(ago(starttime)..ago(endtime))
+| where RecordType =~ szSharePointFileOperation
+| where Operation in~ (szOperations)
+| summarize historicalCount = count() by ClientIP, RecordType, Operation;
+let recentActivity = OfficeActivity
+| where TimeGenerated > ago(endtime)
+| where RecordType =~ szSharePointFileOperation
+| where Operation in~ (szOperations)
+| summarize min(Start_Time), max(Start_Time), recentCount = count() by ClientIP, RecordType, Operation;
+let RareIP = recentActivity | join kind= leftanti ( historicalActivity ) on ClientIP, RecordType, Operation
+// More than 50 downloads/uploads from a new IP
+| where recentCount > threshold;
+OfficeActivity 
+| where TimeGenerated >= ago(endtime) 
+| where RecordType =~ szSharePointFileOperation
+| where Operation in~ (szOperations)
+| join kind= inner (RareIP) on ClientIP, RecordType, Operation
+| where Start_Time between(min_Start_Time .. max_Start_Time)
+| extend y = parse_path(SourceFileName)
+| extend Extension = tostring(y.Extension)
+| extend FileName = tostring(y.Filename)
+| where isnotempty(Extension)
+| summarize StartTimeUtc = min(min_Start_Time), EndTimeUtc = max(max_Start_Time) by Operation, UserType, UserId, ClientIP, OfficeObjectId, FileName, UserAgent, Extension
+| project-reorder StartTimeUtc, EndTimeUtc, Operation, UserId, UserType, ClientIP, OfficeObjectId, FileName, Extension, UserAgent
+| summarize FileTypes = count() by Extension, UserId
+//| render barchart with  (ytitle="FileCount", xtitle="Extensions", title="SharePoint Files Downloaded")
+//| order by ClientIP asc, Operation asc, UserId asc
