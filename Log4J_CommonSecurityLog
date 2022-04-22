@@ -1,0 +1,4 @@
+CommonSecurityLog
+| where SourceIP in ("")
+| where TimeGenerated between(datetime("04-20-2022 09:00:00") .. datetime("04-22-2022 11:00:00"))
+| project TimeGenerated, DeviceVendor, DeviceProduct, DeviceAction, Computer, DestinationPort, DestinationIP, SourcePort, SourceIP
