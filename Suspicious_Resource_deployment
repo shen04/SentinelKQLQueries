@@ -1,0 +1,4 @@
+AzureActivity
+| where ResourceGroup == ""
+| where TimeGenerated between(datetime("04-14-2022 09:00:00") .. datetime("04-15-2022 09:00:00"))
+| where Caller == ""
