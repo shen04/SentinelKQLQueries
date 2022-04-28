@@ -1,0 +1,6 @@
+EmailEvents
+| where RecipientEmailAddress in ("")
+| where TimeGenerated between(datetime("04-19-2022 09:00:00") .. datetime("04-28-2022 09:00:00"))
+| where parse_json(ConfidenceLevel).Phish == "High"
+| where DeliveryAction == "Delivered"
+| project TimeGenerated, SenderFromAddress, SenderFromDomain, SenderIPv4, OrgLevelAction, RecipientEmailAddress, Subject
