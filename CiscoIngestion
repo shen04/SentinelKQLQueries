@@ -1,0 +1,7 @@
+CommonSecurityLog
+| where TimeGenerated > ago(30d)
+| where DeviceVendor == 'Cisco'
+| where DeviceCustomString2 contains "Testing Only"
+| summarize ['Log Ingestion Count'] = count() by bin(TimeGenerated, 1d), DeviceActivity = DeviceCustomString2
+| top 30 by ['Log Ingestion Count']
+| render barchart with (title = "Cisco Firepower Testing Ingestion")
