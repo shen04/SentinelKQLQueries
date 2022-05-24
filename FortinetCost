@@ -1,0 +1,18 @@
+let Categories = datatable(Type: string, Category: string) [
+    "CommonSecurityLog", "Fortinet",
+];
+let knownTables = Usage
+    | where TimeGenerated > ago(10d)
+    | where IsBillable == true 
+    | join kind=leftouter Categories on $left.DataType == $right.Type
+    | summarize
+        size =sumif(Quantity, isnotempty(Category)) / round(1024, -3),
+        sizeOther= sumif(Quantity, (isempty(Category))) / round(1024, -3)
+        by bin(TimeGenerated, 1d), Category   
+    | summarize by bin(TimeGenerated, 1d),
+        ['Log Type'] = iif(isnotempty(Category), Category, "Other"),
+        ['Table Size'] = strcat(iif(isnotempty(Category), size, sizeOther), 'MB'),
+        ['Estimated cost'] = strcat('£', iif(isnotempty(Category), size * round(4, 1), sizeOther * round(4, 1)));
+knownTables
+| order by ['Table Size'] desc
+| where ['Log Type'] == "Fortinet"
