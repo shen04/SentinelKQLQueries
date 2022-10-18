@@ -4,5 +4,3 @@ AuditLogs
 | where userPrincipalName == "[enter user here]"
 | sort by TimeGenerated asc
 | project TimeGenerated, userPrincipalName, OperationName, ResultDescription
-
-// thank you Toby
