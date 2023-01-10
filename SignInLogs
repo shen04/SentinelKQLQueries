@@ -1,5 +1,5 @@
 SigninLogs
-| where TimeGenerated between(datetime("04-07-2022 09:00:00") .. datetime("04-07-2022 09:00:00"))
+| where TimeGenerated between(datetime("04-07-2023 09:00:00") .. datetime("04-07-2023 09:00:00"))
 | where UserPrincipalName == ""
 | project TimeGenerated, IPAddress, Location, LocationDetails, OperationName, ResourceDisplayName, AppDisplayName, Status, DeviceDetail
 | sort by TimeGenerated
