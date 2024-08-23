@@ -1,0 +1,16 @@
+let targetUserId = "";
+SigninLogs
+| where TimeGenerated > ago(7d)
+| where ResultType == 0
+| where UserPrincipalName == targetUserId
+| where UserType == "Member"
+| extend DeviceTrustType = tostring(DeviceDetail.trustType)
+| extend DeviceId = tostring(DeviceDetail.deviceId)
+| distinct UserPrincipalName, IPAddress, DeviceTrustType, DeviceId
+| join kind=inner(
+    OfficeActivity
+    | where TimeGenerated > ago(7d)
+    | where Operation in ("FileSyncDownloadedFull", "FileDownloaded")
+    | where UserId == targetUserId
+    )
+    on $left.UserPrincipalName == $right.UserId, $left.IPAddress == $right.ClientIP
