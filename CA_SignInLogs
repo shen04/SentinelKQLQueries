@@ -1,5 +1,5 @@
 SigninLogs
-| where TimeGenerated between(datetime("03-01-2022 09:00:00") .. datetime("03-03-2022 09:00:00"))
+| where TimeGenerated between(datetime("DD-MM-YYYY HH:MM:SS") .. datetime("DD-MM-YYYY HH:MM:SS"))
 | where UserPrincipalName =~ ""
 | where ClientAppUsed in (
     "Exchange ActiveSync", "Exchange Web Services", "AutoDiscover", "Unknown", "POP3", "IMAP4", "Other clients", "Authenticated SMTP", "MAPI Over HTTP", "Offline Address Book"
