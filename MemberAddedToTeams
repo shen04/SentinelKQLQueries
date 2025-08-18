@@ -1,5 +1,5 @@
 OfficeActivity
 | where TimeGenerated between(datetime("DD-MM-YYYY HH:MM:SS") .. datetime("DD-MM-YYYY HH:MM:SS"))
-| where UserId =~""
+| where UserId =~ ""
 | where Operation == "MemberAdded"
 | project TimeGenerated, RecordType, Operation, UserId, ClientIP, Members, TeamName, ItemName
