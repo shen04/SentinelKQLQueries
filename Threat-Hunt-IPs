@@ -1,0 +1,12 @@
+let IOCs = dynamic([
+    "", "", "", 
+    "", "", "", 
+    "", "", "", 
+    ""
+]);
+union isfuzzy=true
+CommonSecurityLog
+| where DeviceVendor =~ "Palo Alto Networks" 
+    or DeviceVendor =~ "Fortinet"
+| where DestinationIP in (IOCs) or SourceIP in (IOCs)
+| where TimeGenerated > ago(180d)
