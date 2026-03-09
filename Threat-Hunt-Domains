@@ -1,0 +1,5 @@
+let IOCs = dynamic([""]);
+union isfuzzy=true
+    DeviceNetworkEvents
+| where RemoteUrl has_any (IOCs)
+| where TimeGenerated > ago(180d)
