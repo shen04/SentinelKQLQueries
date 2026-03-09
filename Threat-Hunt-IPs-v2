@@ -1,0 +1,16 @@
+let IOCs = dynamic(["1.1.1.1", "1.0.0.1"]);
+union isfuzzy=true
+    (CommonSecurityLog
+    | where DestinationIP == IOCs),
+    (DeviceNetworkEvents
+    | where RemoteIP == IOCs),
+    (SigninLogs
+    | where IPAddress == IOCs),
+    (AADNonInteractiveUserSignInLogs
+    | where IPAddress == IOCs),
+    (AzureActivity
+    | where CallerIpAddress == IOCs),
+    (OfficeActivity
+    | where ClientIP == IOCs)
+| where TimeGenerated > ago(180d)
+| project-reorder TimeGenerated, SourceIP, DeviceName
