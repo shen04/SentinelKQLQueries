@@ -3,3 +3,7 @@ union isfuzzy=true
     DeviceNetworkEvents
 | where RemoteUrl has_any (IOCs)
 | where TimeGenerated > ago(180d)
+
+UrlClickEvents
+| where Url contains ""
+| where TimeGenerated > ago(180d)
