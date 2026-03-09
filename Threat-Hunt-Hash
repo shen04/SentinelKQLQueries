@@ -1,0 +1,13 @@
+let IOCs = dynamic(["", ""]);
+union
+    DeviceProcessEvents,
+    DeviceFileEvents,
+    DeviceImageLoadEvents,
+    CommonSecurityLog
+| where TimeGenerated > ago(180d)
+| where SHA256 == IOCs
+    or SHA1 == IOCs
+    or MD5 == IOCs
+    or FileHash == IOCs
+    or OldFileHash == IOCs
+| project TimeGenerated, DeviceName, FileName, FolderPath
